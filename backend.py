@@ -4,7 +4,7 @@ import torch
 
 from transformers import pipeline
 
-a_pipline = pipeline(
+a_pipeline = pipeline(
     "text-generation",
     model="Nexusflow/NexusRaven-V2-13B",
     torch_dtype="auto",
@@ -27,7 +27,7 @@ async def register_user(prompt: str = Form(...)):
 
 
 def raven_prompt(prompt: str):
-    global a_pipline
+    global a_pipeline
     result = (
         a_pipeline(
             prompt,
