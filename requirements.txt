@@ -1,0 +1,11 @@
+requests
+fastapi
+fastapi
+uvicorn
+gunicorn
+transformers
+accelerate
+python-multipart
+jinja2
+pydantic
+urllib3
