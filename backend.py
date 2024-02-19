@@ -29,7 +29,7 @@ def raven_prompt(prompt: str):
     global a_pipeline
 
     # Custom stopping criterion
-    stop_tokens = ["<bot_end>", "\nThought:"]
+    stop_tokens = ["\nThought:"]
 
     generated_text = ""
     while True:
@@ -48,7 +48,7 @@ def raven_prompt(prompt: str):
         generated_text += chunk
 
         # Check if any stop token is present in the generated text
-        if any(stop_token in chunk for stop_token in stop_tokens):
+        if any(stop_token in generated_text for stop_token in stop_tokens):
             break
 
     torch.cuda.synchronize()
