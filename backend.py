@@ -4,9 +4,10 @@ from fastapi.responses import PlainTextResponse
 app = FastAPI()
 
 
-@app.post("/test")
+@app.post("/raven")
 async def register_user(prompt: str = Form(...)):
     try:
+        print("Raven processing ....")
         return raven_prompt(prompt)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
