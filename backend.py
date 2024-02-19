@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Form, HTTPException
-from fastapi.responses import PlainTextResponse
 import torch
 
 from transformers import pipeline
@@ -8,8 +7,8 @@ from transformers import pipeline
 a_pipeline = pipeline(
     "text-generation",
     model="Nexusflow/NexusRaven-V2-13B",
-    torch_dtype=torch.float16,  # Set the dtype to float16 for CUDA support
-    device=0 if torch.cuda.is_available() else -1,  # Use CUDA if available
+    torch_dtype="auto",
+    device_map="auto",
 )
 
 app = FastAPI()
@@ -19,18 +18,26 @@ app = FastAPI()
 async def register_user(prompt: str = Form(...)):
     try:
         print("Raven processing ....")
-        res = await raven_prompt(prompt)
+        res = raven_prompt(prompt)
+        torch.cuda.empty_cache()
         return res
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-async def raven_prompt(prompt: str):
-    with torch.cuda.amp.autocast():  # Automatic mixed precision
-        result = (
+def raven_prompt(prompt: str):
+    global a_pipeline
+
+    # Custom stopping criterion
+    stop_tokens = ["<bot_end>", "Thought:"]
+
+    generated_text = ""
+    while True:
+        # Generate text in chunks
+        chunk = (
             a_pipeline(
                 prompt,
-                max_new_tokens=2000,
+                max_new_tokens=100,  # Generate text in chunks
                 do_sample=False,
                 temperature=0.001,
                 return_full_text=False,
@@ -38,5 +45,12 @@ async def raven_prompt(prompt: str):
             .replace("Call:", "")
             .strip()
         )
-    print(result)
-    return result
+        generated_text += chunk
+
+        # Check if any stop token is present in the generated text
+        if any(stop_token in chunk for stop_token in stop_tokens):
+            break
+
+    torch.cuda.synchronize()
+    print(generated_text)
+    return generated_text
