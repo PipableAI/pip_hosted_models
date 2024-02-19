@@ -52,5 +52,6 @@ def raven_prompt(prompt: str):
             break
 
     torch.cuda.synchronize()
+    generated_text = generated_text.split(" \nThought:")[0]
     print(generated_text)
     return generated_text
