@@ -7,4 +7,5 @@ log_file = "-"
 bind = "0.0.0.0:3200"
 timeout = 180
 worker_class = "uvicorn.workers.UvicornWorker"
-workers = (multiprocessing.cpu_count() * 2) + 1
+workers = 2
+# workers = (multiprocessing.cpu_count() * 2) + 1
