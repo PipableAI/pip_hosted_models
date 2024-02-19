@@ -3,6 +3,8 @@ from fastapi.responses import PlainTextResponse
 
 app = FastAPI()
 
+_pipline = None
+
 
 @app.post("/raven")
 async def register_user(prompt: str = Form(...)):
@@ -14,16 +16,19 @@ async def register_user(prompt: str = Form(...)):
 
 
 def raven_prompt(prompt: str):
-    from transformers import pipeline
+    global _pipeline
+    if _pipeline is None:
 
-    pipeline = pipeline(
-        "text-generation",
-        model="Nexusflow/NexusRaven-V2-13B",
-        torch_dtype="auto",
-        device_map="auto",
-    )
+        from transformers import pipeline
+
+        _pipeline = pipeline(
+            "text-generation",
+            model="Nexusflow/NexusRaven-V2-13B",
+            torch_dtype="auto",
+            device_map="auto",
+        )
     result = (
-        pipeline(
+        _pipeline(
             prompt,
             max_new_tokens=2000,
             do_sample=False,
