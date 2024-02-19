@@ -2,7 +2,6 @@ from fastapi import FastAPI, Form, HTTPException
 from fastapi.responses import PlainTextResponse
 import torch
 
-app = FastAPI()
 from transformers import pipeline
 
 a_pipline = pipeline(
@@ -11,6 +10,9 @@ a_pipline = pipeline(
     torch_dtype="auto",
     device_map="auto",
 )
+
+
+app = FastAPI()
 
 
 @app.post("/raven")
