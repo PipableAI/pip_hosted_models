@@ -29,7 +29,7 @@ def raven_prompt(prompt: str):
     global a_pipeline
 
     # Custom stopping criterion
-    stop_tokens = ["<bot_end>", "Thought:"]
+    stop_tokens = ["<bot_end>", "\nThought:"]
 
     generated_text = ""
     while True:
@@ -37,7 +37,7 @@ def raven_prompt(prompt: str):
         chunk = (
             a_pipeline(
                 prompt,
-                max_new_tokens=100,  # Generate text in chunks
+                max_new_tokens=50,  # Generate text in chunks
                 do_sample=False,
                 temperature=0.001,
                 return_full_text=False,
