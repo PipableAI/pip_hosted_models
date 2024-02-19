@@ -25,7 +25,7 @@ def raven_prompt(prompt: str):
     result = (
         pipeline(
             prompt,
-            max_new_tokens=2048,
+            max_new_tokens=2000,
             do_sample=False,
             temperature=0.001,
             stop=["<bot_end>"],
