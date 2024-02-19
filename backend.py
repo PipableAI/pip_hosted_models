@@ -3,6 +3,7 @@ from fastapi.responses import PlainTextResponse
 import torch
 
 app = FastAPI()
+from transformers import pipeline
 
 a_pipline = pipeline(
     "text-generation",
@@ -10,8 +11,6 @@ a_pipline = pipeline(
     torch_dtype="auto",
     device_map="auto",
 )
-
-from transformers import pipeline
 
 
 @app.post("/raven")
