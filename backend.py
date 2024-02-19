@@ -39,5 +39,6 @@ def raven_prompt(prompt: str):
         .replace("Call:", "")
         .strip()
     )
+    torch.cuda.synchronize()
     print(result)
     return result
